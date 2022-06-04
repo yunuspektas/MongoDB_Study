@@ -61,12 +61,17 @@ db.fiyatlar.find({$or:[{urunAdı:"Utu"},{vergi:10}]})
 //-----------------------------------------------------------------
 // QUERY 8 : fiyat=5000 olan URUNLERi listeleyiniz.     
 //-----------------------------------------------------------------
-
-
+use("urunler")
+db.fiyatlar.find({fiyat:5000})
+// db.fiyatlar.find({fiyat:{$eq:5000}}) // buda çalışır
+// Trick --> $ herzaman süslü parantez ister ama comment hariç
 
 //-----------------------------------------------------------------
 // QUERY 9 : (urunAdi= TV  vergi=10) olmayan dokumanlari listeleyiniz , nor=hiçbiri
 //-----------------------------------------------------------------
+use("urunler")
+db.fiyatlar.find({$nor:[{urunAdı:"Utu"},{vergi:10}]})
+
 
 
 //-----------------------------------------------------------------
@@ -77,9 +82,12 @@ db.fiyatlar.find({$or:[{urunAdı:"Utu"},{vergi:10}]})
 // {"fiyat":1}, gosterilmek istenmeyenler ise yazilmaz. 
 // Sadece _id icin bir istisna vardir.  onu istemiyorsa 0 ile belirtilir.
 //
-// SYNTAX   db.collection.find( {query}, {projection}). aynı kişinin fiyatını id sini istediği için aynı parantez, süslünün biri filtreleme şartları  için, biri göstermek istediğimiz field lar için
+// SYNTAX   db.collection.find( {query}, {projection}). aynı kişinin fiyatını 
+//id sini istediği için aynı parantez, süslünün biri filtreleme şartları  için, 
+//biri göstermek istediğimiz field lar için
 //-----------------------------------------------------------------
-
+use("urunler")
+db.fiyatlar.find({urunAdi:"TV"},{fiyat:1, _id:0})
 
 //-----------------------------------------------------------------
 // QUERY 11 : Tum dokumanlarin sadece fiyat ve urunAdini listeleyiniz.
