@@ -92,7 +92,9 @@ db.fiyatlar.find({urunAdi:"TV"},{fiyat:1, _id:0})
 //-----------------------------------------------------------------
 // QUERY 11 : Tum dokumanlarin sadece fiyat ve urunAdini listeleyiniz.
 //-----------------------------------------------------------------    
-
+use("urunler")
+db.fiyatlar.find({},{fiyat:1,urunAdi:1, _id:0}) // tüm ürünlerin gelmesi için  
+ //                                             query kısmı boş bırakılır
 
 
 //=================================================================
@@ -112,40 +114,48 @@ db.fiyatlar.find({urunAdi:"TV"},{fiyat:1, _id:0})
 // QUERY 12 : fiyatı 3500'e esit veya daha fazla olan URUNLERi sadece 
 //      urunAdi ve fiyatini listeleyiniz
 //-----------------------------------------------------------------
-
+use("urunler")
+db.fiyatlar.find({fiyat:{$gte:3500}},{fiyat:1,urunAdi:1, _id:0})
 
 //-----------------------------------------------------------------
 // QUERY 13 : fiyatı 4000'e esit veya daha kucuk olan URUNLERin SADECE 
 //  urunAdini listeleyiniz
 //-----------------------------------------------------------------
-
+use("urunler")
+db.fiyatlar.find({fiyat:{$lte:4000}},{urunAdi:1, _id:0})
 
 //-----------------------------------------------------------------
 // QUERY 14 : fiyatı 1500 veya 3500 veya 7000 olan URUNLERi listeleyiniz
 //-----------------------------------------------------------------
-
-
+use("urunler")
+//db.fiyatlar.find({$or:[{fiyat:1500},{fiyat:3500},{fiyat:7000}]},{})
+db.fiyatlar.find({fiyat:{$in:[1500,3500,7000]}})
 // QUERY 15 :fiyatı 1500 veya 3500 veya 7000 olmayan URUNLERi listeleyiniz
-
+use("urunler")
+//db.fiyatlar.find({$nor:[{fiyat:1500},{fiyat:3500},{fiyat:7000}]},{})
+db.fiyatlar.find({fiyat:{$nin:[1500,3500,7000]}})
 
 ///-----------------------------------------------------------------
 // QUERY 16 : fiyatı 5000'den kucuk olup urunAdi Utu olmayan URUNLERin
 // SADECE urunAdi ve fiyat bilgilerini listeleyiniz
 //-----------------------------------------------------------------
-
+use("urunler")
+db.fiyatlar.find({fiyat:{$lt:5000},urunAdi:{$ne:"Utu"}},{urunAdi:1,fiyat:1,_id:0})
 
 //-----------------------------------------------------------------
 // QUERY 17 : fiyatı 4000'den kucuk olan VEYA urunAdi Koltuk olan URUNLERin
 // SADECE urunAdi ve fiyat bilgilerini listeleyiniz
 //-----------------------------------------------------------------
-
+use("urunler")
+db.fiyatlar.find({$or:[{fiyat:{$lt:4000}},{urunAdi:{$eq:"Koltuk"}}]},{urunAdi:1,fiyat:1,_id:0})
 
 //-----------------------------------------------------------------
 // QUERY 18 : URUNLERin tamamini SADECE urunAdini gosterecek sekilde  
 //     fiyatlarina gore artan sirada listeleyiniz.
 //-----------------------------------------------------------------
 // 1 : artan , -1: azalan 
- 
+ use("urunler");
+ db.fiyatlar.find({},{urunAdi:1,_id:0}).sort({ fiyat: 1})
 
 
 //-----------------------------------------------------------------
@@ -154,7 +164,8 @@ db.fiyatlar.find({urunAdi:"TV"},{fiyat:1, _id:0})
 //-----------------------------------------------------------------
 // 1 : artan , -1: azalan 
 
-
+ use("urunler");
+ db.fiyatlar.find({},{urunAdi:1,_id:0}).sort({ fiyat: -1})
 
 //-----------------------------------------------------------------
 // QUERY 20 : fiyati 5000 olan URUNLERi, urunAdi'na gore siralayarak (A-Z)
