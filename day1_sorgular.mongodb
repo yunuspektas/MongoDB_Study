@@ -1,0 +1,158 @@
+//=================================================================
+// SORGULAR (QUERIES) https://docs.mongodb.com/manual/reference/operator/query-comparison/      
+//adresine bakabilirler
+//=================================================================
+
+
+//-----------------------------------------------------------------
+// QUERY 1 : "urunler" adinda bir veritabani ve icerisinde "fiyatlar" 
+// adinda bir collection create ediniz.  
+//-----------------------------------------------------------------
+use("urunler")
+
+//-----------------------------------------------------------------
+// QUERY 2 : asagidaki dokumanlari collection'a insert edip listeleyiniz.  
+//-----------------------------------------------------------------
+use("urunler")
+db.fiyatlar.insertMany([
+{"urunAdi":"TV", "fiyat": 5000, "vergi": 10 ,
+"summary":[{"version":1},{"show":"yok"}]}, // bu value birden çok değer almış !!!
+{"urunAdi":"Telefon", "fiyat": 3500, "vergi": 20 ,"hediye":"kapak"},
+{"urunAdi":"Utu", "fiyat": 1500, "vergi": 5 },
+{"urunAdi":"Koltuk", "fiyat": 5000, "vergi": 10},
+{"urunAdi":"Buzdolabi", "fiyat": 4000, "vergi": 10 } ] ); 
+//-----------------------------------------------------------------
+// QUERY 3 : ilk üc dokumani listeleyiniz --- limit() metodu
+//-----------------------------------------------------------------
+use("urunler")
+db.fiyatlar.find().limit(3)
+
+//-----------------------------------------------------------------
+// QUERY 4 : Sadece 2. ve 3. dokumanlari listeleyiniz.   
+//-----------------------------------------------------------------
+use("urunler")
+db.fiyatlar.find().skip(1).limit(2)
+
+//-----------------------------------------------------------------
+// QUERY 5 : Birinci dokumani listeleyiniz   
+//-----------------------------------------------------------------
+use("urunler")
+db.fiyatlar.findOne()   // find().limit(1)'e göre daha hızlı çalışır
+
+//=================================================================
+//       LOGICAL QUERY OPERATOR (mantıksal sorgu) ($and ,$or, $not,$nor)
+//
+// SYNTAX: { $and: [ {ifade1}, {ifade2} , ... , {ifadeN} ] } nor ve or, and gibi bencil(sorgunun başına giriliyor)
+//         { field: { $not: { <operator-ifade> } } }  ==> ( {"vergi": {$not: {$eq:10}}});
+//=================================================================
+
+//-----------------------------------------------------------------
+// QUERY 6 : fiyat=5000 olan ve urunAdi="TV" olan dokumanlari listeleyiniz. 
+//-----------------------------------------------------------------
+use("urunler")
+db.fiyatlar.find({$and:[{urunAdi:"TV"},{fiyat:5000}]})
+
+//-----------------------------------------------------------------
+// QUERY 7 : urunAdi="Utu" olan veya vergi=10 olan dokumanlari listeleyiniz.      
+//-----------------------------------------------------------------
+use("urunler")
+db.fiyatlar.find({$or:[{urunAdı:"Utu"},{vergi:10}]})
+
+//-----------------------------------------------------------------
+// QUERY 8 : fiyat=5000 olan URUNLERi listeleyiniz.     
+//-----------------------------------------------------------------
+
+
+
+//-----------------------------------------------------------------
+// QUERY 9 : (urunAdi= TV  vergi=10) olmayan dokumanlari listeleyiniz , nor=hiçbiri
+//-----------------------------------------------------------------
+
+
+//-----------------------------------------------------------------
+// QUERY 10 : urunAdi=TV olan kayitlarin sadece fiyat'ini listeleyiniz.
+//     (Bu isleme Projection denilmektedir)
+
+// Projection'da gosterilmek istenen Field'a 1 degeri atanir Ornegin: 
+// {"fiyat":1}, gosterilmek istenmeyenler ise yazilmaz. 
+// Sadece _id icin bir istisna vardir.  onu istemiyorsa 0 ile belirtilir.
+//
+// SYNTAX   db.collection.find( {query}, {projection}). aynı kişinin fiyatını id sini istediği için aynı parantez, süslünün biri filtreleme şartları  için, biri göstermek istediğimiz field lar için
+//-----------------------------------------------------------------
+
+
+//-----------------------------------------------------------------
+// QUERY 11 : Tum dokumanlarin sadece fiyat ve urunAdini listeleyiniz.
+//-----------------------------------------------------------------    
+
+
+
+//=================================================================
+//                    COMPARAISON (karşılaştırma) OPERATOR 
+// $eq : esit mi
+// $lt : kücük mü  (less than)
+// $gt : buyuk mu (greater than)
+// $lte: kucuk esit mi
+// $gte: buyuk esit mi
+// $ne : esit degil mi
+// $in : belirtilen degerler, bir dizideki degerlerden birisine esit mi
+// $nin: belirtilen degerler, bir dizideki tum degerlere esit degil mi
+// SYNTAX :   {field: {$gte: value} }
+//=================================================================
+
+//-----------------------------------------------------------------
+// QUERY 12 : fiyatı 3500'e esit veya daha fazla olan URUNLERi sadece 
+//      urunAdi ve fiyatini listeleyiniz
+//-----------------------------------------------------------------
+
+
+//-----------------------------------------------------------------
+// QUERY 13 : fiyatı 4000'e esit veya daha kucuk olan URUNLERin SADECE 
+//  urunAdini listeleyiniz
+//-----------------------------------------------------------------
+
+
+//-----------------------------------------------------------------
+// QUERY 14 : fiyatı 1500 veya 3500 veya 7000 olan URUNLERi listeleyiniz
+//-----------------------------------------------------------------
+
+
+// QUERY 15 :fiyatı 1500 veya 3500 veya 7000 olmayan URUNLERi listeleyiniz
+
+
+///-----------------------------------------------------------------
+// QUERY 16 : fiyatı 5000'den kucuk olup urunAdi Utu olmayan URUNLERin
+// SADECE urunAdi ve fiyat bilgilerini listeleyiniz
+//-----------------------------------------------------------------
+
+
+//-----------------------------------------------------------------
+// QUERY 17 : fiyatı 4000'den kucuk olan VEYA urunAdi Koltuk olan URUNLERin
+// SADECE urunAdi ve fiyat bilgilerini listeleyiniz
+//-----------------------------------------------------------------
+
+
+//-----------------------------------------------------------------
+// QUERY 18 : URUNLERin tamamini SADECE urunAdini gosterecek sekilde  
+//     fiyatlarina gore artan sirada listeleyiniz.
+//-----------------------------------------------------------------
+// 1 : artan , -1: azalan 
+ 
+
+
+//-----------------------------------------------------------------
+// QUERY 19 : URUNLERin tamamini SADECE urunAdini gosterecek sekilde  
+//     fiyatlarina gore azalan sirada listeleyiniz.
+//-----------------------------------------------------------------
+// 1 : artan , -1: azalan 
+
+
+
+//-----------------------------------------------------------------
+// QUERY 20 : fiyati 5000 olan URUNLERi, urunAdi'na gore siralayarak (A-Z)
+// listeleyiniz.
+//extra eleman ekle, fiyatı 5000 olan.
+//-----------------------------------------------------------------
+// 1 : A-Z, -1: Z-A ( ASCII formatina gore siralama yapar)
+
+
