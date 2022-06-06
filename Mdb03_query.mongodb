@@ -9,32 +9,88 @@ db.foods.find(
             )
 
 //QUERY 02 ... 80'den fazla 150'den az puan alan restoranları bulmak için bir MongoDB query create ediniz.
+use("countries")
+db.foods.find(
+                {"grades.score":{$gt:80,$lt:150}}, // query
+                {_id:0, name:1} // projection
+            )
+
+//QUERY 03 ... Herhangi bir 'American' mutfağı hazırlamayan ve 70'den büyük score a ve 
+//-65.754168'den küçük enlem (coord) değerine sahip restoranları bulmak için bir MongoDB 
+//query create ediniz.
+use("countries")
+db.foods.find(
+                {
+                    "cuisine":{$ne:"American"},
+                    "address.coord":{$lt:-65.754168},
+                    "grades.score":{$gt:70}
+                }, // query
+                {
+                    _id:0, name:1
+                } // projection
+            )
 
 
-//QUERY 03 ... Herhangi bir 'American' mutfağı hazırlamayan ve 70'den büyük score a ve -65.754168'den küçük enlem (coord) değerine sahip restoranları bulmak için bir MongoDB query create ediniz.
+//QUERY 04 ... Adının ilk üç harfi 'Wil' olan restoranlar için restoran id, name, 
+//borough ve cuisine bulmak için bir MongoDB query create ediniz.. /^Wil/
+use("countries")
+db.foods.find(
+             {"name":/^Wil/},//query
+             {_id:0,name:1,restaurant_id:1, borough:1,cuisine:1}//projection
+             )
+
+//QUERY 05 ... Adının bir yerinde üç harf olarak 'Reg' içeren restoranlar için 
+//restoran kimliği, adı, ilçesi ve mutfağını bulmak için bir MongoDB query create ediniz..
+use("countries")
+db.foods.find(
+             {"name":/Reg/},//query
+             {_id:0,name:1,restaurant_id:1, borough:1,cuisine:1}//projection
+             )
+
+//QUERY 06 ... Staten Island veya Queens veya Bronx veya, Brooklyn borough a ait 
+//restoranlar için restoran id sini, adını, borough(ilçe) ve mutfağını bulmak için 
+//bir MongoDB query create ediniz.
+use("countries")
+db.foods.find(
+             {"borough":{$in:["Staten Island","Queens","Bronx","Brooklyn"]}},//query
+             {_id:0,name:1,restaurant_id:1, borough:1,cuisine:1}//projection
+             )
+
+//QUERY 07 ... 'Amerikan' ve 'Chinese' dışında yemek yapan veya restoranın adı 'Wil' ile başlayan 
+//restoranların restoran kimliği, adı, ilçesi ve mutfağını bulmak için bir MongoDB query create ediniz..
+use("countries")
+db.foods.find(
+             {$or:[{$and:[{cuisine:{$ne:"American "}},{cuisine:{$ne:"Chinese"}}]},{name:/^Will/}]},//query
+             {_id:0,name:1,restaurant_id:1, borough:1,cuisine:1}//projection
+             )
+
+//QUERY 08 ... grades (dereceler) dizisinin ISODate "2014-08-11T00:00:00Z" tarihinde  "A"  olan ve
+//  11 score almış restoranlar için restoran id sini, adını ve grades lerini bulmak için bir 
+//MongoDB query create ediniz..
+use("countries")
+db.foods.find(
+             {grades:{date:ISODate ("2014-08-11T00:00:00Z"),grade:"A",score:11}},//query
+             {_id:0,name:1,restaurant_id:1, grades:1}//projection
+             )
 
 
-
-//QUERY 04 ... Adının ilk üç harfi 'Wil' olan restoranlar için restoran id, name, borough ve cuisine bulmak için bir MongoDB query create ediniz.. /^Wil/
-
-
-//QUERY 05 ... Adının bir yerinde üç harf olarak 'Reg' içeren restoranlar için restoran kimliği, adı, ilçesi ve mutfağını bulmak için bir MongoDB query create ediniz..
-
-
-//QUERY 06 ... Staten Island veya Queens veya Bronx veya, Brooklyn borough a ait restoranlar için restoran id sini, adını, borough(ilçe) ve mutfağını bulmak için bir MongoDB query create ediniz.
-
-//QUERY 07 ... 'Amerikan' ve 'Chinese' dışında yemek yapan veya restoranın adı 'Wil' ile başlayan restoranların restoran kimliği, adı, ilçesi ve mutfağını bulmak için bir MongoDB query create ediniz..
-
-
-//QUERY 08 ... grades (dereceler) dizisinin ISODate "2014-08-11T00:00:00Z" tarihinde  "A"  olan ve  11 score almış restoranlar için restoran id sini, adını ve grades lerini bulmak için bir MongoDB query create ediniz..
-
-
-
-// QUERY 9 ... grades dizisinin   bir ISODate "2014-08-11T00:00:00Z" tarihinde  9 score aldığı ve (grade) bir "A" notu içerdiği restoranlar için restoran id sini, adını ve sadece bahsedilen grades elemanını bulmak için bir MongoDB query create ediniz.
-
-//QUERY 10 ... Tüm adreslerin caddeyi içerip içermediğini öğrenmek için bir MongoDB query create ediniz. cadde yazmayı unuttuğum varmı diye kontrol için. $exists : true =var olanları, $exists : false=yok olanları gösterir
-
-//QUERY 12 ... score u 7'ye böldükten sonra kalan olarak 0 döndüren restoranlar için restoran id si, adı ve grades seçecek bir MongoDB query create ediniz. $mod:[7,0]
+// QUERY 9 ... grades dizisinin   bir ISODate "2014-08-11T00:00:00Z" tarihinde  9 score aldığı ve 
+//(grade) bir "A" notu içerdiği restoranlar için restoran id sini, adını ve sadece bahsedilen 
+//grades elemanını bulmak için bir MongoDB query create ediniz.
+use("countries")
+db.foods.find(
+             {grades:{date:ISODate ("2014-08-11T00:00:00Z"),grade:"A",score:9}},//query
+             {_id:0,name:1,restaurant_id:1, grades:1}//projection
+             )
+//QUERY 10 ... Tüm adreslerin caddeyi içerip içermediğini öğrenmek için 
+//bir MongoDB query create ediniz. cadde yazmayı unuttuğum varmı diye kontrol için. 
+//$exists : true =var olanları, $exists : false=yok olanları gösterir
+use("countries")
+db.foods.find(
+             {"address.street":{$exists : false}}
+             )
+//QUERY 12 ... score u 7'ye böldükten sonra kalan olarak 0 döndüren restoranlar için restoran id si, 
+//adı ve grades seçecek bir MongoDB query create ediniz. $mod:[7,0]
 
 
 
