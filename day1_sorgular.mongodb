@@ -14,13 +14,44 @@ use("urunler")
 // QUERY 2 : asagidaki dokumanlari collection'a insert edip listeleyiniz.  
 //-----------------------------------------------------------------
 use("urunler")
-db.fiyatlar.insertMany([
-{"urunAdi":"TV", "fiyat": 5000, "vergi": 10 ,
-"summary":[{"version":1},{"show":"yok"}]}, // bu value birden çok değer almış !!!
-{"urunAdi":"Telefon", "fiyat": 3500, "vergi": 20 ,"hediye":"kapak"},
-{"urunAdi":"Utu", "fiyat": 1500, "vergi": 5 },
-{"urunAdi":"Koltuk", "fiyat": 5000, "vergi": 10},
-{"urunAdi":"Buzdolabi", "fiyat": 4000, "vergi": 10 } ] ); 
+db.fiyatlar.insertMany(
+                        [
+                            {
+                                "urunAdi":"TV", 
+                                "fiyat": 5000, 
+                                "vergi": 10 ,
+                                "summary":
+                                    [
+                                        {
+                                            "version":1
+                                        },
+                                        {
+                                            "show":"yok"
+                                        }
+                                    ]
+                            }, // bu value birden çok değer almış !!!
+                            {
+                                "urunAdi":"Telefon", 
+                                "fiyat": 3500, 
+                                "vergi": 20 ,
+                                "hediye":"kapak"
+                            },
+                            {
+                                "urunAdi":"Utu", 
+                                "fiyat": 1500, 
+                                "vergi": 5 
+                            },
+                            {
+                                "urunAdi":"Koltuk", 
+                                "fiyat": 5000, 
+                                "vergi": 10
+                            },
+                            {
+                                "urunAdi":"Buzdolabi", 
+                                "fiyat": 4000, 
+                                "vergi": 10 
+                            } 
+                        ] ); 
 //-----------------------------------------------------------------
 // QUERY 3 : ilk üc dokumani listeleyiniz --- limit() metodu
 //-----------------------------------------------------------------

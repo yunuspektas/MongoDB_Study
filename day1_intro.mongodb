@@ -21,10 +21,11 @@ use("school2")
 db
 
 // -----------------------------------------------------------------
-// 4) Aktif olan veritabaninda bir collection olusturmak icin
+// 4) Aktif olan veritabaninda bir collection ( tablo )  olusturmak icin
 // -----------------------------------------------------------------
 use("school2")
 db.createCollection("students")
+//db.getCollectionNames()   ---> bu komut ile mevcut collectionlar listelenir
  
 // -----------------------------------------------------------------
 // 5) Aktif olan veritabanini silmek icin  
@@ -45,9 +46,17 @@ db.students.drop()
 // 7) collection'a bir dokuman eklemek icin
 // -----------------------------------------------------------------
 use("school2")
-db.students.insertOne({name:"haluk", age:48, hoby:"küşleme", bolum:"developer"})
-//  Trick --> collection'a create etmeden doğrudan insertOne komudu ile data GİRİLEBİLİR
-//  Trick2 --> collectiona data insert edilirken field lara tek tırnek, çift tırnak ve space kullanılabilir
+db.students.insertOne(
+                        {
+                            name:"haluk",
+                            age:48, 
+                            hoby:"küşleme", 
+                            bolum:"developer"
+                        }
+                    )
+//  Trick   --> collection'ı create etmeden doğrudan insertOne komudu ile data GİRİLEBİLİR
+//  Trick2  --> collectiona data insert edilirken field lara tek tırnek, çift tırnak ve
+//             space kullanılabilir
 // -----------------------------------------------------------------
 // 8) Collection'daki tum dokumanlari listelemek (SORGU-QUERY)icin.
 // -----------------------------------------------------------------
@@ -58,8 +67,37 @@ db.students.find()
 // 9) Collection'a birden fazla dokuman eklemek icin
 // -----------------------------------------------------------------
 use("school2")
-db.students.insertMany([{name:"halit", age:33, bolum:"lead", arac:"VW", memleket:"van"},{name:"muzaffer", age:37,bolum:"ba",memleket:"urfa"},{name:"ahmet",age:41,bolum:"sm",takım:"bjk"},{name:"enes",age:23,bolum:"ds",ulke:"poland"}])
- // Trick3 ---> insertMany komutu ile data girilirken elementler [] ile doplanır ve her bir element {} içine create edilip , ile ayrılır
+db.students.insertMany(
+                        [
+                            {
+                                name:"halit", 
+                                age:33, 
+                                bolum:"lead", 
+                                arac:"VW", 
+                                memleket:"van"
+                            },
+                            {
+                                name:"muzaffer", 
+                                age:37,
+                                bolum:"ba",
+                                memleket:"urfa"
+                            },
+                            {
+                                name:"ahmet",
+                                age:41,
+                                bolum:"sm",
+                                takım:"bjk"
+                            },
+                            {
+                                name:"enes",
+                                age:23,
+                                bolum:"ds",
+                                ulke:"poland"
+                            }
+                        ]
+                    )
+ // Trick3 ---> insertMany komutu ile data girilirken elementler "[]" ile depolanır ve her bir 
+ //             element "{}" içine create edilip "," ile ayrılır
  // -----------------------------------------------------------------
 // 10) bir değişkene tarih ekle new Date()
 // -----------------------------------------------------------------
