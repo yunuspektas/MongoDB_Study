@@ -90,12 +90,16 @@ db.ogrenciler.aggregate(
 //---------------------------------------------------------------------------------
 // QUERY 04 ...  Tum subelerdeki toplam ogrenci sayisini hesaplayan query create ediniz.
 //---------------------------------------------------------------------------------
-
+//db.ogrenciler.aggregate({$group:{_id:“$sube”}.{$count:“”})-->subeye göre grublanan dataları count eder grup içine girmez
+ //db.ogrenciler.aggregate ({$group:{_id: “$sube”}},{$count:“toplam öğrenci”
+         //==>bu yanlış yazım, subeleri sayar, cevap olarak 2 yazdırır, 2 sube var der
+//sum:1 mesela A daki öğrencileri 1 er 1 er sayıp toplar. burada 1 yerine $not (not lara göre topla) yazarsak alttaki soru gibi A daki notları kendi arasında B dekileri kendi arasında not ları toplar. count sum max gibi metodlarda ön bilgi şart
 
 //---------------------------------------------------------------------------------
 // QUERY 05 ...  Tum subelerdeki toplam ogrenci sayilarini ve her subedeki maks notu hesaplayan  query create ediniz.
 //----------------------------------------------------------------------------------
-
+use(“okul”)
+db.ogrenciler.aggregate({$group:{_id:“$sube”,topOgcSayisi:{$sum:1},basarılı:{$max:“$not”}}})
 
 //---------------------------------------------------------------------------------
 // QUERY 06 ...  yasi 30'dan kucuk olanlarin subelere gore not ortalamalarini hesaplayan query create ediniz.
