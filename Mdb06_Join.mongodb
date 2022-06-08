@@ -1,0 +1,147 @@
+///==================================================================================
+//                          UNIONWITH (FULL JOIN) --> şartı olmayan genel birleştirme
+//==================================================================================
+//  - SQL'deki UNION ALL komutuna benzer.
+//  - 2 coll.'nin birlesimini gerceklestirmek icin kullanılir. 
+//  - Ornegin, $unionWith 2 farklı coll.'daki pipeline sonuclarini tek bir 
+//    sonuc setinde birlesitirir. 
+//  - Bu sonuc seti pipeline'da bir sonraki asamaya iletilebilir.
+//  - SYNTAX:
+//  - { $unionWith: { coll: "<coll.>", pipeline: [ <stage1>, ... ] } }
+//==================================================================================
+
+use("MEDYA");
+
+db.romanlar.insertMany(
+[{"yazar" : "Mehmet Bak", "fiyat" : 60, "yayinEvi" : "Yildiz", "adet": 1000 },
+{"yazar" : "Ali Gel", "fiyat" : 75, "yayinEvi" : "MaviAy", "adet": 1200 },
+{"yazar" : "Su Ak", "fiyat" : 90, "yayinEvi" : "Caliskan", "adet": 2200},
+{"yazar" : "Meryem Can", "fiyat" : 35, "yayinEvi" : "MorEv","adet": 560},
+{"yazar" : "Pelin Su", "fiyat" : 80, "yayinEvi" : "Hedef", "adet": 890 },
+{"yazar" : "Suat Ok", "fiyat" : 54, "yayinEvi" : "Sinir","adet": 245}]);
+
+use("MEDYA")
+db.denemeler.insertMany(
+[{"yazar" : "Mehmet Bak", "fiyat" : 34, "yayinEvi" : "Yildiz", "adet": 400 },
+{"yazar" : "Deniz Kos", "fiyat" : 44, "yayinEvi" : "Yildiz", "adet": 350 },
+{"yazar" : "Su Ak", "fiyat" : 50, "yayinEvi" : "MorEv", "adet": 200},
+{"yazar" : "İsmet Kaç", "fiyat" : 25, "yayinEvi" : "Hedef","adet": 800},
+{"yazar" : "Ali Gel", "fiyat" : 40, "yayinEvi" : "Hedef", "adet": 1200 },
+{"yazar" : "Meryem Can", "fiyat" : 22, "yayinEvi" : "MaviAy","adet": 300}]);
+
+//---------------------------------------------------------------------------------
+// QUERY 01 ...  Her 2 coll.'dan tum dokumanlari "adet" sutununa (field) gore ters siralayarak 
+//               listeleyiniz(FULL JOIN id gözükmesin).
+//---------------------------------------------------------------------------------
+use("MEDYA")
+db.romanlar.aggregate(
+                      {$unionWith:{coll:"denemeler"}},//romanlar coll. ile denemeler coll. birleştirildi.Sıra önemli degildir
+                      {$sort:{adet:-1}},//adet field ters sıralandı.
+                      {$project:{_id:0}}//_id field console da kaldırıldı
+                     )
+
+
+///---------------------------------------------------------------------------------
+// QUERY 02 ... Her bir yayinevinin toplam kitap sayilarini (2 coll. icin) hesaplayan 
+//              ve siralayan query create ediniz. 
+//---------------------------------------------------------------------------------
+
+use("MEDYA")
+db.romanlar.aggregate(
+                      {$unionWith:{coll:"denemeler"}},//romanlar coll. ile denemeler coll. birleştirildi.Sıra önemli degildir
+                      {$group:{_id:"$yayinEvi",toplam_kitap_sayisi:{$sum:"$adet"}}},//adet field ters sıralandı.
+                      {$sort:{toplam_kitap_sayisi:1}}//_id field console da kaldırıldı
+                     )
+
+//---------------------------------------------------------------------------------
+// QUERY 03 ... Her bir yayinEvinin kitap (deneme ve roman) satislarindan  elde edecegi toplam 
+//              geliri hesaplayan query create ediniz. (birleşen coll. larda carpma icin $multiply)
+//---------------------------------------------------------------------------------
+
+
+//==================================================================================
+//                       $LOOKUP (LEFT, RIGHT, INNER JOIN) --> şartlı birleşme
+//    {
+//      $lookup:
+//      {
+//        from: <Join uygulanacak coll.>,
+//        localField: <giris dokumanindaki ilgili sutunu>,
+//        foreignField: <Join yapilacak collectiondaki ilgili sutun>,
+//        as: <cikis sutunu>
+//      }
+//   }
+//==================================================================================
+db.romanlar.insertMany(
+[{"yazar" : "Mehmet Bak", "fiyat" : 60, "yayinEvi" : "Yildiz", "adet": 1000 },
+{"yazar" : "Ali Gel", "fiyat" : 75, "yayinEvi" : "MaviAy", "adet": 1200 },
+{"yazar" : "Su Ak", "fiyat" : 90, "yayinEvi" : "Caliskan", "adet": 2200},
+{"yazar" : "Meryem Can", "fiyat" : 35, "yayinEvi" : "MorEv","adet": 560},
+{"yazar" : "Pelin Su", "fiyat" : 80, "yayinEvi" : "Hedef", "adet": 890 },
+{"yazar" : "Suat Ok", "fiyat" : 54, "yayinEvi" : "Sinir","adet": 245}]);
+
+use("MEDYA")
+db.siirler.insertMany(
+[{"muellif" : "Mehmet Bak", "fiyat" : 34, "yayinEvi" : "Yildiz", "adet": 400 },
+{"muellif" : "Deniz Kos", "fiyat" : 44, "yayinEvi" : "Yildiz", "adet": 350 },
+{"muellif" : "Su Ak", "fiyat" : 50, "yayinEvi" : "MorEv", "adet": 200},
+{"muellif" : "İsmet Kaç", "fiyat" : 25, "yayinEvi" : "Hedef","adet": 800},
+{"muellif" : "Ali Gel", "fiyat" : 40, "yayinEvi" : "Hedef", "adet": 1200 },
+{"muellif" : "Meryem Can", "fiyat" : 22, "yayinEvi" : "MaviAy","adet": 300}]);
+//romanlar coll. ile siirler coll. birleştirilecek
+
+//---------------------------------------------------------------------------------
+// QUERY 04 ... Her iki collectionda ortak olan yazarlarin toplam kitap sayilarini ve kitap 
+//              fiyatlarinin toplamini hesaplayan query create ediniz. 
+//              (INNER JOIN)   gözükmesini istediğimiz eklenecek field lar için ; addFields değil ,project içinde yazınız. 
+//---------------------------------------------------------------------------------
+
+
+
+//---------------------------------------------------------------------------------
+// QUERY 05 ... romanlar collectionda yer alan her bir yazarin toplam kitap sayilarini 
+//              (2 coll. icin) hesaplayan query create ediniz. 
+//---------------------------------------------------------------------------------
+
+
+
+
+
+
+// ödev sorusu :
+
+// A  Order coll. ı aşağıdaki belgeleri içerir:
+// { "_id" : 1, "item" : "abc", "price" : 12, "quantity" : 2 }
+// { "_id" : 2, "item" : "jkl", "price" : 20, "quantity" : 1 }
+// { "_id" : 3, "price" :5  }
+
+// Başka bir  inventory coll. ı aşağıdaki belgeleri içerir:
+// { "_id" : 1, "sku" : "abc", description: "product 1", "instock" : 120 }
+// { "_id" : 2, "sku" : "def", description: "product 2", "instock" : 80 }
+// { "_id" : 3, "sku" : "ijk", description: "product 3", "instock" : 60 }
+// { "_id" : 4, "sku" : "jkl", description: "product 4", "instock" : 70 }
+// { "_id" : 5, "sku": null, description: "Incomplete" }
+// { "_id" : 6 }
+
+//
+// The following aggregation operation on the orders coll. joins the documents from
+// orders with the documents from the inventory coll. using the fields item from the
+// orders coll. and the sku field from the inventory coll.:
+//orders collectionda yer alan her bir verinin toplam price larını (
+//    2 coll. icin) hesaplayan query create ediniz. (LEFT JOIN)  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
