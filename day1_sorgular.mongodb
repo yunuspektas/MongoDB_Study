@@ -205,6 +205,6 @@ db.fiyatlar.find({$or:[{fiyat:{$lt:4000}},{urunAdi:{$eq:"Koltuk"}}]},{urunAdi:1,
 //-----------------------------------------------------------------
 // 1 : A-Z, -1: Z-A ( ASCII formatina gore siralama yapar)
 
-use(“urunler”)
+use("urunler”)
 db.fiyatlar.find({fiyat:5000})//fiyatı 5000 olan elemntler listelenedi
 .sort({urunAdi:1})//sıralama urunAdi’na  gore a->z yapıldı

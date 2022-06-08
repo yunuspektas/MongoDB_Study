@@ -62,21 +62,25 @@ db.ogrenciler.insertMany([
 ///---------------------------------------------------------------------------------
 // QUERY 01 ...  yasi 30'dan buyuk olan ogrencileri sorgulayiniz.   
 //---------------------------------------------------------------------------------
-use(“okul”)
+use("okul")
 db.ogrenciler.aggregate({$match:{yas:{$gt:30}}})
 //db.ogrenciler.find({yas:{$gt:30}})
 
 //--------------------------------------------------------------------------------
 // QUERY 02 ...  dersler i sadece ingilizce ve yasi 70'dan kucuk olan ogrencileri sorgulayiniz.   
 //---------------------------------------------------------------------------------
-use(“okul”)
-db.ogrenciler.aggregate({$match:{dersler:[“ingilizce”],yas:{$lt:70}}})
+use("okul")
+db.ogrenciler.aggregate({$match:{dersler:["ingilizce"],yas:{$lt:70}}})
 
 //---------------------------------------------------------------------------------
 // QUERY 03 ...  B-subesindeki ogrenci sayisini hesaplayan query create ediniz.
 //               NOT: SAYMAK icin  $match icerisinde $count metodu kullanilabilir. 
 //---------------------------------------------------------------------------------
-
+use("okul")
+db.ogrenciler.aggregate(
+                        {$match:{sube:"B"}},//match:eşleştirme ,fitreleme
+                        {$count:" "}//saydırıldı
+                        )
 
 //---------------------------------------------------------------------------------
 // NOT: Group isleminde degiskenlerin onune $ isareti konulmalidir.

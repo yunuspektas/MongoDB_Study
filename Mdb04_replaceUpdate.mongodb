@@ -82,10 +82,10 @@ db.personel.findOneAndUpdate(
 // QUERY 05 ... salary'si 5000 veya ismi "Veli Git" olan personelin salary'sini 9000 , ismini MUZAFFER olarak değiştir.
 //              (diger datalarını koruyunuz)
 // -----------------------------------------------------------------
-use(“GOOGLE”);
+use("GOOGLE");
 db.personel.findOneAndUpdate(
-                              {$or:[{salary:5000},{name:“Veli Git”}]},//filter -> değişecek field
-                              {$set:{salary:9000,name:“Muzaffer”}}//update -> değişim
+                              {$or:[{salary:5000},{name:"Veli Git"}]},//filter -> değişecek field
+                              {$set:{salary:9000,name:"Muzaffer"}}//update -> değişim
                               )
 
 
@@ -93,7 +93,7 @@ db.personel.findOneAndUpdate(
 // QUERY 06 ... salary'si 7500 olan personelin salary'sine %10 zam yapiniz, 
 //               (diger datalarını koruyunuz)
 //-----------------------------------------------------------------
-use(“GOOGLE”);
+use("GOOGLE");
 db.personel.findOneAndUpdate(
                               {salary:7500},//filter -> değişecek field
                               {$mul:{salary:1.1}}//update -> değişim -> $mul:{field:value} field’ı value ile çarp
@@ -104,7 +104,7 @@ db.personel.findOneAndUpdate(
 // QUERY 07 ... salary'si 4800 olan personelin salary'sina 500 TL zam yapiniz, 
 //              (diger datalarını koruyunuz).azaltmak için -500 yazabiliriz
 //-----------------------------------------------------------------
-  use(“GOOGLE”);
+  use("GOOGLE");
 db.personel.findOneAndUpdate(
                               {salary:4800},//filter -> değişecek field
                               {$inc:{salary:500}}//update -> değişim -> $inc:{field:value} field’ı value kadar arttırır
@@ -119,10 +119,10 @@ db.personel.findOneAndUpdate(
 //       eslesmeme durumu oldugunda dokumanin olusturulmasi istenirse
 //       {upsert:true} kullanilmalidir. VsCode console null return eder, compass ta datayı insert eder.
 
-use(“GOOGLE”);
+use("GOOGLE");
 db.personel.findOneAndUpdate(
                               {salary:20000},//filter -> değişecek field
-                              {$set:{name:“Faruk Duyar”,start_date:new Date()}},//update -> değişim kadar arttırır
+                              {$set:{name:"Faruk Duyar",start_date:new Date()}},//update -> değişim kadar arttırır
                               {upsert:true}//optional case
                               )
 
@@ -140,9 +140,9 @@ db.personel.findOneAndUpdate(
 // -----------------------------------------------------------------
 //  QUERY 09 ... ismi Can Tak olan personelin salary'sini 12000'e guncelleyiniz.
 // -----------------------------------------------------------------
-use(“GOOGLE”);
+use("GOOGLE");
 db.personel.updateOne(
-                      {name:“Can Tak”},//filter -> değişecek field
+                      {name:"Can Tak"},//filter -> değişecek field
                       {$set:{salary:12000}}//update -> değişim kadar arttırır
                       )
 
@@ -150,7 +150,7 @@ db.personel.updateOne(
 // -----------------------------------------------------------------
 //  QUERY 10 ... salary'si 15000 olan personellerin dokumanina prim:1000 bilgisini ekleyiniz.
 // -----------------------------------------------------------------
-use(“GOOGLE”);
+use("GOOGLE");
 db.personel.updateOne(
                       {salary:15000},//filter -> değişecek field
                       {$set:{prim:1000}}//update -> değişim kadar arttırır
@@ -162,7 +162,7 @@ db.personel.updateOne(
 //              eger boyle bir personel yok ise (upsert:true) yeni bir kayit aciniz.yeni açılacağı için id li yazdırdı consol da
 //-----------------------------------------------------------------
 
-use(“GOOGLE”);
+use("GOOGLE");
 db.personel.updateOne(
                       {salary:5000},//filter -> değişecek field
                       {$set:{prim:2000}},//update -> değişim kadar arttırır
@@ -172,10 +172,10 @@ db.personel.updateOne(
 //-----------------------------------------------------------------
 // QUERY 12 ... key adını değiştirme. bütün dökümanların field ad larını değiştirelim
 //-----------------------------------------------------------------
-use(“GOOGLE”);
+use("GOOGLE");
 db.personel.updateMany(
                       {},//filter -> değişecek field
-                      {$rename:{“name”:“isim”,salary:“maas”,start_date:“ise_giris_tarihi”}}//update -> değişim kadar arttırır
+                      {$rename:{"name":"isim",salary:"maas",start_date:"ise_giris_tarihi"}}//update -> değişim kadar arttırır
                       )
 
 
@@ -186,8 +186,8 @@ db.personel.updateMany(
 //-----------------------------------------------------------------
 // QUERY 13 ... ismi Mehmet Can olan kaydi siliniz. 
 //-----------------------------------------------------------------
-use(“GOOGLE”);
-db.personel.deleteOne({isim:“Can Yak”})
+use("GOOGLE");
+db.personel.deleteOne({isim:"Can Yak"})
 
 
 //-----------------------------------------------------------------
@@ -198,7 +198,7 @@ db.personel.deleteOne({isim:“Can Yak”})
 //-----------------------------------------------------------------
 // QUERY 15 ... Tum dokumanlari siliniz. 
 //-----------------------------------------------------------------
-use(“GOOGLE”);
+use("GOOGLE");
 db.personel.deleteMany({})
 
 
