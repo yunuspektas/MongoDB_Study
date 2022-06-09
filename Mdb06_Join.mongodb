@@ -57,19 +57,27 @@ db.romanlar.aggregate(
 // QUERY 03 ... Her bir yayinEvinin kitap (deneme ve roman) satislarindan  elde edecegi toplam 
 //              geliri hesaplayan query create ediniz. (birleşen coll. larda carpma icin $multiply)
 //---------------------------------------------------------------------------------
-
+use("MEDYA")
+db.romanlar.aggregate(
+                      {$unionWith:{coll:"denemeler"}},//romanlar coll. ile denemeler coll. birleştirildi.Sıra önemli degildir
+                      {$group:{_id:"$yayinEvi",toplam_gelir:{$sum:{$multiply:["$adet","$fiyat"]}}}}//her yayınevi gruplanarak toplam gelir hesaplandı
+                      
+                     )
 
 //==================================================================================
 //                       $LOOKUP (LEFT, RIGHT, INNER JOIN) --> şartlı birleşme
 //    {
 //      $lookup:
 //      {
-//        from: <Join uygulanacak coll.>,
-//        localField: <giris dokumanindaki ilgili sutunu>,
-//        foreignField: <Join yapilacak collectiondaki ilgili sutun>,
-//        as: <cikis sutunu>
+//        from: <Join uygulanacak İlişki kurulacak coll.>,
+//        localField: <giris dokumanindaki ilgili yani Modelde ilişki kuracak sutunu>,
+//        foreignField: <Join yapilacak collectiondaki ilişki kurulacak sutun>,
+//        as: <İlişkilendirme sonucu gelen verilerin atanacağı alan cikis sutunu>
 //      }
-//   }
+//      { $unwind:<field path> }
+//    }
+//    $unwind —>Bir collection’da en fazla elemanı olan sublist in hangisi olduğunu bulma‌ aksiyonu yapar
+//    $unwind operatörü dokümanın içerisindeki istenen listeye göre çoklama yapılmasını sağlar.
 //==================================================================================
 db.romanlar.insertMany(
 [{"yazar" : "Mehmet Bak", "fiyat" : 60, "yayinEvi" : "Yildiz", "adet": 1000 },
@@ -94,7 +102,27 @@ db.siirler.insertMany(
 //              fiyatlarinin toplamini hesaplayan query create ediniz. 
 //              (INNER JOIN)   gözükmesini istediğimiz eklenecek field lar için ; addFields değil ,project içinde yazınız. 
 //---------------------------------------------------------------------------------
-
+use("MEDYA")
+db.romanlar.aggregate(
+                      {$lookup:{ // coll. ilişkisinde ortaklar için sıra önemli değildir
+                       from:"siirler",//roman coll. ile siirler coll. ilşkilendirildi
+                       localField:"yazar",//romanlar coll. ilşki kurulacak field atandı
+                       foreignField:"muellif",//siirler coll. ilşki kurulacak field atandı
+                       as:"ortak_yazarlar"//ilişkilenedirlen field’lardan gelen value’lar için ortak field cretae edildi
+                               }
+                      },
+                     { $unwind:{path:"$ortak_yazarlar"}//unwind:açmak,çözmek  2. foreign tabloyu da bağla, yolunu belirt, 
+                     //sonra iki tabloylada altta işlem yap , yazmazsak tek tabloyla işlem yapıyor. bu olmazsa sadece 
+                     //soldaki yazarları alır adetleri toplamaz
+                     },
+                      { $project:{
+                                toplam_adet:{$sum:["$adet","$ortak_yazarlar.adet"]},
+                                toplam_fiyat:{$sum:["$fiyat","$ortak_yazarlar.fiyat"]},
+                                _id:0, 
+                                yazar:1
+                                 }
+                      }                    
+                     )
 
 
 //---------------------------------------------------------------------------------
